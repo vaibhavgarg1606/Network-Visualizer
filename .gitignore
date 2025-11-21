@@ -1,0 +1,118 @@
+# ========================================================
+# GLOBAL / OS FILES
+# ========================================================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+pip-log.txt
+
+# Env Files (VERY IMPORTANT!!)
+.env
+.env.local
+.env.*.local
+*.env
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ========================================================
+# FRONTEND (Next.js / React / Node)
+# ========================================================
+
+# Node dependencies
+frontend/node_modules/
+node_modules/
+
+# Next.js build output
+frontend/.next/
+.next/
+out/
+frontend/out/
+
+# Turbopack / Turbo / Caching
+.turbo/
+frontend/.turbo/
+.cache/
+frontend/.cache/
+
+# Vercel deployment
+.vercel/
+frontend/.vercel/
+
+# Typescript build info
+*.tsbuildinfo
+frontend/*.tsbuildinfo
+
+# Production build artifacts
+dist/
+frontend/dist/
+build/
+frontend/build/
+
+# ========================================================
+# BACKEND (Python / Django / FastAPI / Flask)
+# ========================================================
+
+# Bytecode / cache
+backend/__pycache__/
+backend/**/*.pyc
+backend/**/*.pyo
+backend/**/*.pyd
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+env/
+venv/
+.venv/
+backend/env/
+backend/venv/
+backend/.venv/
+
+# Django stuff
+backend/db.sqlite3
+backend/media/
+backend/staticfiles/
+backend/static/
+
+# Django migration cache
+backend/**/migrations/*__pycache__/
+
+# Flask instance folder
+instance/
+backend/instance/
+
+# ========================================================
+# OTHER
+# ========================================================
+
+# Build artifacts
+*.egg-info/
+.eggs/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# Python packaging
+build/
+dist/
+*.egg
+MANIFEST
+
+# ========================================================
+# END OF FILE
+# ========================================================

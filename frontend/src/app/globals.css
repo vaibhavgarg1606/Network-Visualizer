@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+:root {
+  --background: #050505;
+  --foreground: #f7f7f7;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Theme Variants */
+.theme-cyan .glass-panel {
+  border-color: rgba(34, 211, 238, 0.1);
+  box-shadow: 0 4px 30px rgba(34, 211, 238, 0.05);
+}
+
+.theme-red .glass-panel {
+  background: rgba(255, 0, 0, 0.03);
+  border-color: rgba(255, 50, 50, 0.15);
+  box-shadow: 0 4px 30px rgba(255, 0, 0, 0.1);
+}
+
+.glass-panel:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Background Bleed Effects */
+.bg-bleed-cyan {
+  background: radial-gradient(circle at 50% 50%, rgba(34, 211, 238, 0.15) 0%, transparent 70%);
+  filter: blur(100px);
+  pointer-events: none;
+}
+
+.bg-bleed-red {
+  background: radial-gradient(circle at 50% 50%, rgba(220, 38, 38, 0.2) 0%, transparent 70%);
+  filter: blur(100px);
+  pointer-events: none;
+}
+
+/* Text Glow */
+.text-glow-cyan {
+  text-shadow: 0 0 20px rgba(34, 211, 238, 0.5);
+}
+
+.text-glow-red {
+  text-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+}
