@@ -3,6 +3,7 @@
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Environment } from '@react-three/drei';
 import { Suspense } from 'react';
+import WASDControls from './WASDControls';
 import VoxelStack from './VoxelStack';
 
 interface SceneProps {
@@ -12,6 +13,9 @@ interface SceneProps {
     rgbExplosion: boolean;
     layerSpacing: number;
     onLayerClick: (id: number) => void;
+    architecture: string;
+    liveFeatureMaps?: Record<string, { maps: string[], total: number }>;
+    probabilities?: { label: string; score: number }[];
 }
 
 function GridHelper({ mode }: { mode: 'normal' | 'adversarial' | 'gradcam' }) {
@@ -26,11 +30,12 @@ function GridHelper({ mode }: { mode: 'normal' | 'adversarial' | 'gradcam' }) {
     );
 }
 
-export default function Scene({ mode, noiseLevel, showTerrain, rgbExplosion, layerSpacing, onLayerClick }: SceneProps) {
+export default function Scene({ mode, noiseLevel, showTerrain, rgbExplosion, layerSpacing, onLayerClick, architecture, liveFeatureMaps, probabilities }: SceneProps) {
     return (
         <Canvas>
-            <PerspectiveCamera makeDefault position={[5, 5, 10]} />
+            <PerspectiveCamera makeDefault position={[8, 5, 12]} fov={60} />
             <OrbitControls enableDamping dampingFactor={0.05} />
+            <WASDControls />
             <Suspense fallback={null}>
                 <ambientLight intensity={0.5} />
                 <pointLight position={[10, 10, 10]} />
@@ -41,6 +46,9 @@ export default function Scene({ mode, noiseLevel, showTerrain, rgbExplosion, lay
                     rgbExplosion={rgbExplosion}
                     layerSpacing={layerSpacing}
                     onLayerClick={onLayerClick}
+                    architecture={architecture}
+                    liveFeatureMaps={liveFeatureMaps}
+                    probabilities={probabilities}
                 />
                 <GridHelper mode={mode} />
                 <Environment preset="city" />

@@ -114,5 +114,29 @@ dist/
 MANIFEST
 
 # ========================================================
+# MERGED FROM FRONTEND
+# ========================================================
+
+# Next.js
+next-env.d.ts
+frontend/next-env.d.ts
+
+# Testing
+coverage/
+frontend/coverage/
+
+# Security
+*.pem
+
+# Yarn Berry
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# ========================================================
 # END OF FILE
 # ========================================================
