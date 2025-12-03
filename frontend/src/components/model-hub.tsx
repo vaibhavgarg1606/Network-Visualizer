@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Search, X } from "lucide-react";
+import { ArrowLeft, Clock, Search, X } from "lucide-react";
 import {
   categoryOrder,
   modelCatalog,
@@ -48,6 +48,29 @@ export function ModelHub({
   );
 
   const isOverlay = variant === "overlay";
+
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const updateScrollButtons = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 0);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
+  };
+
+  useEffect(() => {
+    updateScrollButtons();
+  }, [activeCategory, filteredModels.length]);
+
+  const scrollByAmount = (direction: "left" | "right") => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const amount = direction === "left" ? -320 : 320;
+    el.scrollBy({ left: amount, behavior: "smooth" });
+    setTimeout(updateScrollButtons, 300);
+  };
 
   return (
     <div
@@ -139,49 +162,94 @@ export function ModelHub({
             ))}
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {filteredModels.length === 0 ? (
-              <div className="col-span-full rounded-2xl border border-white/10 bg-white/5 p-10 text-center text-white/60">
-                No models match the query.
-              </div>
-            ) : (
-              filteredModels.map((model) => (
-                <Card
-                  key={model.name}
-                  className="group relative overflow-hidden bg-gradient-to-b from-white/5 to-white/0"
-                >
-                  <div className="mb-4 h-24 rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent transition duration-500 group-hover:rotate-1 group-hover:scale-105">
-                    {model.name === "VoxelStack" && <CubeVisual />}
-                    {model.name === "LatentMorph" && <BlobVisual />}
-                    {model.name === "PatchFlow" && <GridVisual />}
-                    {model.name === "Attentio Core" && <ConstellationVisual />}
-                    {model.name === "ChronoCoil" && <HelixVisual />}
-                    {model.name === "TransFlow" && <DualSphereVisual />}
-                    {model.name === "HyperSector" && <HyperplaneVisual />}
-                    {model.name === "FractalLogic" && <TreeVisual />}
-                    {model.name === "SimpleFit" && <DataPlaneVisual />}
-                    {model.name === "GridWalker" && <CompassVisual />}
-                  </div>
-                  <p className="text-xs uppercase tracking-[0.3em] text-white/45">
-                    {model.type}
-                  </p>
-                  <h4 className="mt-3 text-2xl font-semibold text-white">
-                    {model.name}
-                  </h4>
-                  <p className="text-sm text-white/55">{model.subtitle}</p>
-                  <p className="mt-3 text-sm text-white/60">{model.description}</p>
-                  <Button
-                    variant="glass"
-                    onClick={() => {
-                      router.push(`/models/${model.slug}`);
-                    }}
-                    className="mt-6 w-full opacity-0 transition group-hover:opacity-100"
-                  >
-                    Launch
-                  </Button>
-                </Card>
-              ))
+          <div className="relative">
+            {canScrollLeft && (
+              <button
+                onClick={() => scrollByAmount("left")}
+                className="absolute left-0 top-1/2 z-20 -translate-y-1/2 rounded-full border border-white/20 bg-black/60 px-3 py-2 text-xs text-white/70 shadow-lg backdrop-blur hover:text-white"
+                aria-label="Scroll left"
+              >
+                ‹
+              </button>
             )}
+            {canScrollRight && (
+              <button
+                onClick={() => scrollByAmount("right")}
+                className="absolute right-0 top-1/2 z-20 -translate-y-1/2 rounded-full border border-white/20 bg-black/60 px-3 py-2 text-xs text-white/70 shadow-lg backdrop-blur hover:text-white"
+                aria-label="Scroll right"
+              >
+                ›
+              </button>
+            )}
+
+            <div
+              ref={scrollRef}
+              onScroll={updateScrollButtons}
+              className="flex gap-6 overflow-x-auto overflow-y-hidden pb-2 scrollbar-none"
+            >
+              {filteredModels.length === 0 ? (
+                <div className="min-w-full rounded-2xl border border-white/10 bg-white/5 p-10 text-center text-white/60">
+                  No models match the query.
+                </div>
+              ) : (
+                filteredModels.map((model) => {
+                  const isPlanned = model.status === "planned";
+                  return (
+                    <Card
+                      key={model.name}
+                      className="group relative flex-none basis-[calc((100%-3rem)/3)] overflow-hidden bg-gradient-to-b from-white/5 to-white/0"
+                    >
+                      <div className="mb-4 h-24 rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent transition duration-500 group-hover:rotate-1 group-hover:scale-105">
+                        {model.name === "VoxelStack" && <CubeVisual />}
+                        {model.name === "LatentMorph" && <BlobVisual />}
+                        {model.name === "PatchFlow" && <GridVisual />}
+                        {model.name === "Attentio Core" && <ConstellationVisual />}
+                        {model.name === "ChronoCoil" && <HelixVisual />}
+                        {model.name === "TransFlow" && <DualSphereVisual />}
+                        {model.name === "HyperSector" && <HyperplaneVisual />}
+                        {model.name === "FractalLogic" && <TreeVisual />}
+                        {model.name === "SimpleFit" && <DataPlaneVisual />}
+                        {model.name === "GridWalker" && <CompassVisual />}
+                      </div>
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="text-xs uppercase tracking-[0.3em] text-white/45">
+                          {model.type}
+                        </p>
+                        {isPlanned && (
+                          <span className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-white/70">
+                            <Clock className="h-3 w-3" />
+                            Planned
+                          </span>
+                        )}
+                      </div>
+                      <h4 className="mt-3 text-2xl font-semibold text-white">
+                        {model.name}
+                      </h4>
+                      <p className="text-sm text-white/55">{model.subtitle}</p>
+                      <p className="mt-3 text-sm text-white/60">
+                        {model.description}
+                      </p>
+                      <Button
+                        variant="glass"
+                        disabled={isPlanned}
+                        onClick={() => {
+                          if (!isPlanned) {
+                            router.push(`/models/${model.slug}`);
+                          }
+                        }}
+                        className={`mt-6 w-full opacity-0 transition group-hover:opacity-100 ${
+                          isPlanned
+                            ? "cursor-default opacity-100 bg-white/5 text-white/60 hover:bg-white/5"
+                            : ""
+                        }`}
+                      >
+                        {isPlanned ? "Planned" : "Launch"}
+                      </Button>
+                    </Card>
+                  );
+                })
+              )}
+            </div>
           </div>
         </div>
       </GlassPanel>

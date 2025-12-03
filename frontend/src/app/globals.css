@@ -65,3 +65,13 @@ body {
 .text-glow-red {
   text-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
 }
+
+/* Utility: hide scrollbars while preserving scroll behavior */
+.scrollbar-none {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}

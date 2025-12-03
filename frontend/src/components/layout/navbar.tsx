@@ -3,13 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LayoutGrid, Home, Box } from "lucide-react";
+import { LayoutGrid, Home } from "lucide-react";
 import { motion } from "framer-motion";
 
 const navItems = [
     { name: "Home", href: "/demo", icon: Home },
     { name: "Models", href: "/selection", icon: LayoutGrid },
-    { name: "Playground", href: "/playground", icon: Box },
 ];
 
 export function Navbar() {

@@ -79,7 +79,7 @@ export default function VoxelStackPage() {
         {
             icon: Activity,
             title: "Overview",
-            description: "Visualizes the internal activation maps of CNN architectures (VGG16/ResNet50) in a 3D tunnel, revealing feature hierarchies."
+            description: "Visualizes the internal activation maps of a CNN-based image classifier in a 3D tunnel, revealing feature hierarchies."
         },
         {
             icon: Box,

@@ -29,9 +29,8 @@ export default function VoxelStack({ mode, noiseLevel, showTerrain, rgbExplosion
             // 16 layers (0 to 15) -> Length = 15 * spacing
             return (15 * layerSpacing) / 2;
         } else {
-            // Default/Generic - assume ~10 layers or dynamic
-            // If liveFeatureMaps is available, we could count, but let's estimate
-            const numLayers = liveFeatureMaps ? Object.keys(liveFeatureMaps).length : 5;
+            // Default/Generic CNN
+            const numLayers = liveFeatureMaps ? Object.keys(liveFeatureMaps).length : 8;
             return ((numLayers - 1) * layerSpacing) / 2;
         }
     }, [architecture, layerSpacing, liveFeatureMaps]);
@@ -39,7 +38,7 @@ export default function VoxelStack({ mode, noiseLevel, showTerrain, rgbExplosion
     return (
         <group rotation={[0, -Math.PI / 4, 0]}>
             <group position={[0, 0, -centerOffset]}>
-                {/* Input Stage - Only for VGG/ResNet */}
+                {/* Input Stage - Only for generic ImageNet CNNs */}
                 {architecture !== 'mnist' && (
                     <group position={[-5, 0, 0]}>
                         <RGBExplosion explodeFactor={rgbExplosion ? 1 : 0} />

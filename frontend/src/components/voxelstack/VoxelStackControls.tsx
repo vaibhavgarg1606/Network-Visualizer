@@ -57,29 +57,7 @@ export default function VoxelStackControls({
                     <Sliders className="w-4 h-4" />
                     Configuration
                 </div>
-                <div className="space-y-3">
-                    <label className="text-xs text-gray-500 uppercase tracking-wider font-medium">Architecture</label>
-                    <div className="flex bg-white/5 rounded-lg p-1">
-                        <button
-                            onClick={() => setArchitecture('vgg16')}
-                            className={cn(
-                                "flex-1 py-1.5 rounded-md text-xs font-medium transition-all",
-                                architecture === 'vgg16' ? "bg-white/10 text-white shadow-sm" : "text-gray-500 hover:text-gray-300"
-                            )}
-                        >
-                            VGG16
-                        </button>
-                        <button
-                            onClick={() => setArchitecture('resnet50')}
-                            className={cn(
-                                "flex-1 py-1.5 rounded-md text-xs font-medium transition-all",
-                                architecture === 'resnet50' ? "bg-white/10 text-white shadow-sm" : "text-gray-500 hover:text-gray-300"
-                            )}
-                        >
-                            ResNet50
-                        </button>
-                    </div>
-                </div>
+                {/* Architecture selector removed to keep VoxelStack focused on a single ImageNet CNN setup */}
                 <div className="space-y-3">
                     <div className="flex items-center justify-between">
                         <label className="text-xs text-gray-500 uppercase tracking-wider font-medium">RGB Explosion</label>

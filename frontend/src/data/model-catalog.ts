@@ -10,7 +10,8 @@ export type ModelSlug =
   | "hypersector"
   | "fractallogic"
   | "simplefit"
-  | "gridwalker";
+  | "gridwalker"
+  | "mnist";
 
 export type ModelCard = {
   name: string;
@@ -18,6 +19,7 @@ export type ModelCard = {
   type: string;
   subtitle: string;
   description: string;
+  status?: "available" | "planned";
 };
 
 export const categoryOrder: ModelCategory[] = [
@@ -32,18 +34,19 @@ export const modelCatalog: Record<ModelCategory, ModelCard[]> = {
     {
       name: "VoxelStack",
       slug: "voxelstack",
-      type: "CNN (ResNet/VGG)",
+      type: "CNN (ImageNet)",
       subtitle: "Hierarchical Spatial Analysis",
       description:
         "Rotating layered cube showing spatial convolutions lighting in sequence.",
     },
     {
-      name: "LatentMorph",
-      slug: "latentmorph",
-      type: "VAE (Generative)",
-      subtitle: "Generative Manifold Mapping",
+      name: "MNIST CNN",
+      slug: "mnist",
+      type: "CNN (MNIST)",
+      subtitle: "Handwritten Digit Classification",
       description:
-        "Liquid sphere warping between cube, orb, and prism to mimic latent shifts.",
+        "End-to-end pipeline for classifying MNIST digits with layer-wise visualizations and live predictions.",
+      status: "available",
     },
     {
       name: "PatchFlow",
@@ -52,6 +55,16 @@ export const modelCatalog: Record<ModelCategory, ModelCard[]> = {
       subtitle: "Attention Over Image Patches",
       description:
         "Floating tiled grid with pulsating connectors representing patch attention.",
+      status: "planned",
+    },
+    {
+      name: "LatentMorph",
+      slug: "latentmorph",
+      type: "VAE (Generative)",
+      subtitle: "Generative Manifold Mapping",
+      description:
+        "Liquid sphere warping between cube, orb, and prism to mimic latent shifts.",
+      status: "planned",
     },
   ],
   Language: [
@@ -62,6 +75,7 @@ export const modelCatalog: Record<ModelCategory, ModelCard[]> = {
       subtitle: "Contextual Embedding Matrix",
       description:
         "Constellation web of nodes shifting brightness like multi-head attention.",
+      status: "planned",
     },
     {
       name: "ChronoCoil",
@@ -70,6 +84,7 @@ export const modelCatalog: Record<ModelCategory, ModelCard[]> = {
       subtitle: "Sequential State Memory",
       description:
         "Neon helix with traveling light showing looping temporal memory.",
+      status: "planned",
     },
     {
       name: "TransFlow",
@@ -78,6 +93,7 @@ export const modelCatalog: Record<ModelCategory, ModelCard[]> = {
       subtitle: "Translation Sequence Generation",
       description:
         "Dual spheres transferring volume from encoder to decoder flows.",
+      status: "planned",
     },
   ],
   Tabular: [
@@ -88,6 +104,7 @@ export const modelCatalog: Record<ModelCategory, ModelCard[]> = {
       subtitle: "Optimal Boundary Maximization",
       description:
         "Bisected orb with razor-thin neon hyperplane dividing decision regions.",
+      status: "planned",
     },
     {
       name: "FractalLogic",
@@ -96,6 +113,7 @@ export const modelCatalog: Record<ModelCategory, ModelCard[]> = {
       subtitle: "Hierarchical Splitting Engine",
       description:
         "Crystal tree rotating with glowing paths highlighting decision routes.",
+      status: "planned",
     },
     {
       name: "SimpleFit",
@@ -104,6 +122,7 @@ export const modelCatalog: Record<ModelCategory, ModelCard[]> = {
       subtitle: "Linear Predictive Modeling",
       description:
         "Data plane with rotating glowing line fitting scattered minimal points.",
+      status: "planned",
     },
   ],
   Agents: [
@@ -114,6 +133,7 @@ export const modelCatalog: Record<ModelCategory, ModelCard[]> = {
       subtitle: "Policy Optimization",
       description:
         "Prismatic compass snapping to cardinal points as actions fire.",
+      status: "planned",
     },
   ],
 };

@@ -15,14 +15,15 @@ export function HomeContent({ showHero = true }: HomeContentProps) {
       <section className="px-6 pb-16">
         <div className="mx-auto max-w-5xl space-y-6 text-center">
           <p className="text-xs uppercase tracking-[0.4em] text-white/45">
-            Core Intelligence Labs
+            Core Features
           </p>
           <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-            Matte glass research cards
+            Explore NeuroVision
           </h2>
           <p className="text-lg text-white/65">
-            Each card is a living module—transparent, resilient, and mapped to
-            the neon grid that surrounds VisXAI.
+            Understand how NeuroVision, a university minor project, helps you
+            visualize and interpret machine learning models in a clear and
+            structured way.
           </p>
         </div>
         <div className="mx-auto mt-12 grid max-w-6xl gap-6 md:grid-cols-3">
@@ -45,14 +46,15 @@ export function HomeContent({ showHero = true }: HomeContentProps) {
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-col gap-4 text-center">
             <p className="text-xs uppercase tracking-[0.4em] text-white/45">
-              Research-grade modules
+              Project Details
             </p>
             <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-              Matte glass labs, neon clarity
+              Capabilities &amp; Roadmap
             </h2>
             <p className="text-lg text-white/65">
-              Every tile floats like a concept bike chassis—smooth matte finish,
-              frosted glass, and luminous telemetry edges.
+              See what the current version of NeuroVision can do today, and how
+              we plan to extend it with additional models and interpretability
+              tools over time.
             </p>
           </div>
 
@@ -77,11 +79,15 @@ export function HomeContent({ showHero = true }: HomeContentProps) {
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-col gap-3 text-center">
             <p className="text-xs uppercase tracking-[0.4em] text-white/45">
-              Datasets & labs
+              Datasets &amp; Experiments
             </p>
             <h2 className="text-3xl font-semibold text-white">
-              Curate the perfect signal
+              Hands-on labs with real data
             </h2>
+            <p className="text-lg text-white/65">
+              Work with standard vision datasets and interactive experiments to
+              understand how different models behave on real examples.
+            </p>
           </div>
 
           <div className="mt-10 grid gap-6 md:grid-cols-3">

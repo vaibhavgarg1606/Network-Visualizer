@@ -20,16 +20,16 @@ export default function SelectionPage() {
         </button>
         <div className="space-y-5">
           <p className="text-xs uppercase tracking-[0.4em] text-white/45">
-            VisXAI model bays
+            NeuroVision model library
           </p>
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div className="space-y-3">
               <h1 className="text-4xl font-semibold sm:text-5xl">
-                Tune your mission payload
+                Choose a model to explore
               </h1>
               <p className="max-w-2xl text-lg text-white/70">
-                Browse every neural chassis across vision, language, and tabular
-                domains. Hover to preview, launch to enter immersive detail pages.
+                Browse curated models across vision, language, and tabular tasks.
+                Hover to preview, launch to open interactive detail pages.
               </p>
             </div>
             <div className="rounded-3xl border border-white/15 bg-white/5 px-6 py-4 backdrop-blur">
@@ -37,7 +37,7 @@ export default function SelectionPage() {
                 <Sparkles className="h-4 w-4" />
                 Curated decks
               </div>
-              <p className="mt-2 text-3xl font-semibold text-white">9 models</p>
+              <p className="mt-2 text-3xl font-semibold text-white">5 decks</p>
             </div>
           </div>
         </div>

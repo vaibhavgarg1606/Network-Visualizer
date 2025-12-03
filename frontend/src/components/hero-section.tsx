@@ -36,24 +36,22 @@ export function HeroSection({ stats }: HeroSectionProps) {
         <GlassPanel className="w-full max-w-4xl rounded-[32px] p-10">
           <p className="mb-6 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/5 px-5 py-2 text-xs uppercase tracking-[0.4em] text-white/70">
             <ShieldCheck className="h-4 w-4 text-white" />
-            VisXAI · Explainable Futures
+            NeuroVision · Model Visualization Toolkit
           </p>
           <h1 className="text-4xl font-light leading-tight tracking-tight text-white sm:text-6xl lg:text-7xl">
-            Visualize Intelligence in Matte-Black Fidelity
+            Visualize and Analyze Machine Learning Models Clearly
           </h1>
           <p className="mt-6 text-lg text-white/75 sm:text-xl">
-            A frosted-glass research cockpit fused with a neon dot shader canopy.
-            Decode neural behaviors with cinematic clarity, zero noise, and full
-            control.
+            A lightweight platform to explore, interpret, and compare machine learning models. Inspect layers, activations, and predictions visually in one place.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Link href="/selection" className="pointer-events-auto">
               <Button size="lg" className="rounded-full border-white/30 bg-white/10 hover:bg-white/20">
-                Launch Laboratory
+                View Models
               </Button>
             </Link>
             <Button variant="ghost" size="lg" className="pointer-events-auto rounded-full border border-white/20 bg-white/5 hover:bg-white/15 hover:border-white/40">
-              Explore Demos
+              Open Playground
             </Button>
           </div>
         </GlassPanel>

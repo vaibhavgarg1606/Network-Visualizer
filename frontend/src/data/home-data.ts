@@ -1,91 +1,83 @@
-import {
-    BrainCircuit,
-    BrainCog,
-    Cpu,
-    Orbit,
-    ShieldAlert,
-    Sparkles,
-    Stars,
-} from "lucide-react";
+import { BrainCircuit, BrainCog, Cpu, Sparkles, Stars } from "lucide-react";
 
 export const stats = [
-    { label: "Models analyzed", value: "10M+" },
-    { label: "Researchers", value: "500K+" },
-    { label: "Neural probes / sec", value: "2.4B" },
-    { label: "Global uptime", value: "99.99%" },
+  { label: "Models", value: "5 integrated" },
+  { label: "Architectures", value: "CNN & Classical" },
+  { label: "Team", value: "3 students" },
+  { label: "Roadmap", value: "RNN, LSTM, Transformers" },
 ];
 
 export const features = [
-    {
-        title: "Neural Visualization",
-        description:
-            "Volumetric reconstructions, orbit cameras, and real-time activation scrubbing in one cinematic viewport.",
-        icon: BrainCircuit,
-    },
-    {
-        title: "GPU Acceleration",
-        description:
-            "Petaflop-grade CUDA swarms streaming interpretability layers at 240fps across multi-cloud constellations.",
-        icon: Cpu,
-    },
-    {
-        title: "Signal Intelligence",
-        description:
-            "Anomaly atlases, bias telemetry, and compliance heatmaps stitched into your mission control.",
-        icon: Sparkles,
-    },
-    {
-        title: "Quantum Nodes",
-        description:
-            "Federated experiments that route through quantum-inspired relay stations for zero-trust collaboration.",
-        icon: Orbit,
-    },
+  {
+    title: "CNN Visualization",
+    description:
+      "Inspect convolutional layers, feature maps, and predictions from CNN-based vision models used in the project.",
+    icon: BrainCircuit,
+  },
+  {
+    title: "Classical ML Models",
+    description:
+      "Compare neural networks with baseline classical models such as logistic regression and SVMs on the same tasks.",
+    icon: BrainCog,
+  },
+  {
+    title: "Playground Mode",
+    description:
+      "Experiment with different inputs, observe outputs, and build intuition for how models behave without writing code.",
+    icon: Sparkles,
+  },
+  {
+    title: "Upcoming Enhancements",
+    description:
+      "Planned support for sequence models and additional interpretability views as part of the ongoing university minor project.",
+    icon: Stars,
+  },
 ];
 
 export const labs = [
-    {
-        title: "Atlas Vault",
-        description:
-            "140+ PB of curated multi-modal datasets with provenance tracking and cognitive fingerprints.",
-        tag: "Verified",
-        image:
-            "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1200&auto=format&fit=crop",
-    },
-    {
-        title: "Orbit Compute",
-        description:
-            "Elastic GPU constellations routed through carbon-aware zones and tuned for long-haul inference.",
-        tag: "Green Compute",
-        image:
-            "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&auto=format&fit=crop",
-    },
-    {
-        title: "Signal Commons",
-        description:
-            "Community labs with peer-reviewed starter kits, telemetry templates, and lucide-grade iconography.",
-        tag: "Open Source",
-        image:
-            "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1200&auto=format&fit=crop",
-    },
+  {
+    title: "MNIST Classification Lab",
+    description:
+      "Explore how a CNN learns to recognize handwritten digits using the MNIST dataset, with layer-wise visualizations.",
+    tag: "Available now",
+    image:
+      "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?w=1200&auto=format&fit=crop",
+  },
+  {
+    title: "CIFAR-10 Vision Lab (Planned)",
+    description:
+      "Planned extension of the platform to small natural images using CIFAR-10 for more complex vision experiments.",
+    tag: "Planned",
+    image:
+      "https://images.unsplash.com/photo-1526498460520-4c246339dccb?w=1200&auto=format&fit=crop",
+  },
+  {
+    title: "Classical ML Playground",
+    description:
+      "Interactive space to compare simple machine learning models with deep learning approaches on the same datasets.",
+    tag: "In progress",
+    image:
+      "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1200&auto=format&fit=crop",
+  },
 ];
 
 export const researchCards = [
-    {
-        title: "Glassbox Anatomy",
-        description:
-            "Peel back every layer of the model stack with translucent volumetrics, 3D attention clusters, and synapse-level playback.",
-        icon: BrainCog,
-    },
-    {
-        title: "Adversarial Robustness",
-        description:
-            "Stress-test mission-critical systems with live adversarial barrages, shield metrics, and automated remediation flows.",
-        icon: ShieldAlert,
-    },
-    {
-        title: "Latent Space Cartography",
-        description:
-            "Plot hyperspace trajectories across your embeddings using holographic star maps, drift waypoints, and curiosity probes.",
-        icon: Stars,
-    },
+  {
+    title: "Model Architecture View",
+    description:
+      "See an overview of each model’s structure, including layers, connections, and key configuration details.",
+    icon: BrainCircuit,
+  },
+  {
+    title: "Activation & Prediction Heatmaps",
+    description:
+      "Visualize intermediate activations and output confidence to understand what the model focuses on.",
+    icon: Sparkles,
+  },
+  {
+    title: "Dataset & Input Preview",
+    description:
+      "Inspect sample inputs, labels, and preprocessing steps to understand how data flows through the system.",
+    icon: Cpu,
+  },
 ];

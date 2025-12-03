@@ -161,7 +161,7 @@ export default function VoxelStackPage() {
                                 <Activity className={cn("w-6 h-6 mb-4", styles.accent)} />
                                 <h3 className="text-sm font-medium text-white mb-2">Overview</h3>
                                 <p className="text-xs text-gray-400 leading-relaxed">
-                                    Visualizes the internal activation maps of CNN architectures (VGG16/ResNet50) in a 3D tunnel, revealing feature hierarchies.
+                                    Visualizes the internal activation maps of a compact CNN trained on MNIST, highlighting how early and deep layers respond to your drawing.
                                 </p>
                             </div>
                             <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-colors">
@@ -450,7 +450,7 @@ export default function VoxelStackPage() {
                                                 <p className="text-xs">Draw a digit and click Predict</p>
                                             </div>
                                         ) : (
-                                            // Default VGG/ResNet Mock Data
+                                            // Default ImageNet mock data
                                             <>
                                                 <div className="p-4 rounded-xl bg-white/5 border border-white/10 relative overflow-hidden group">
                                                     <div className="flex justify-between items-center mb-2 relative z-10">
