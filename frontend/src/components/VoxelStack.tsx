@@ -8,20 +8,26 @@ import OutputNodes from './OutputNodes';
 import VGG16LayerTunnel from './VGG16LayerTunnel';
 
 interface VoxelStackProps {
-    mode: 'normal' | 'adversarial' | 'gradcam';
-    noiseLevel: number;
-    showTerrain: boolean;
+    mode: 'normal' | 'gradcam';
     rgbExplosion: boolean;
     layerSpacing: number;
     onLayerClick: (id: number) => void;
     architecture: string;
     liveFeatureMaps?: Record<string, { maps: string[], total: number }>;
     probabilities?: { label: string; score: number }[];
+    gradcamData?: any;
+    gradcamLayerIndex?: number | null;
+    viewMode?: 'tunnel' | 'gallery';
 }
 
-export default function VoxelStack({ mode, noiseLevel, showTerrain, rgbExplosion, layerSpacing, onLayerClick, architecture, liveFeatureMaps, probabilities }: VoxelStackProps) {
+export default function VoxelStack({ mode, rgbExplosion, layerSpacing, onLayerClick, architecture, liveFeatureMaps, probabilities, gradcamData, gradcamLayerIndex, viewMode = 'gallery' }: VoxelStackProps) {
     // Calculate center offset to rotate around the middle of the model
     const centerOffset = useMemo(() => {
+        // In Grad-CAM mode with selected layer, center on that layer
+        if (mode === 'gradcam' && gradcamLayerIndex !== null && gradcamLayerIndex !== undefined) {
+            return gradcamLayerIndex * layerSpacing;
+        }
+
         if (architecture === 'mnist') {
             // 4 layers (0, 1, 2, 3) -> Length = 3 * spacing
             return (3 * layerSpacing) / 2;
@@ -33,7 +39,7 @@ export default function VoxelStack({ mode, noiseLevel, showTerrain, rgbExplosion
             const numLayers = liveFeatureMaps ? Object.keys(liveFeatureMaps).length : 8;
             return ((numLayers - 1) * layerSpacing) / 2;
         }
-    }, [architecture, layerSpacing, liveFeatureMaps]);
+    }, [architecture, layerSpacing, liveFeatureMaps, mode, gradcamLayerIndex]);
 
     return (
         <group rotation={[0, -Math.PI / 4, 0]}>
@@ -58,13 +64,15 @@ export default function VoxelStack({ mode, noiseLevel, showTerrain, rgbExplosion
                             layerSpacing={layerSpacing}
                             liveFeatureMaps={liveFeatureMaps}
                             onLayerClick={onLayerClick}
+                            mode={mode}
+                            gradcamData={gradcamData}
+                            gradcamLayerIndex={gradcamLayerIndex}
+                            viewMode={viewMode}
                         />
                     ) : (
                         <LayerTunnel
                             spacing={layerSpacing}
                             mode={mode}
-                            noiseLevel={noiseLevel}
-                            showTerrain={showTerrain}
                             rgbExplosion={rgbExplosion}
                             onLayerClick={onLayerClick}
                             architecture={architecture}

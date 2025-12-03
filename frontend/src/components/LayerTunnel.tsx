@@ -7,8 +7,6 @@ import { useLoader } from '@react-three/fiber';
 interface LayerTunnelProps {
     spacing: number;
     mode: string;
-    noiseLevel: number;
-    showTerrain: boolean;
     rgbExplosion: boolean;
     onLayerClick: (id: number) => void;
     architecture: string;

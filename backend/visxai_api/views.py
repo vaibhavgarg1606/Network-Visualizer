@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.conf import settings
 from .model_registry import ModelRegistry
 
 class UnifiedModelView(APIView):
@@ -39,7 +40,14 @@ class UnifiedModelView(APIView):
             return Response(result, status=status.HTTP_200_OK)
 
         except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            import traceback
+            error_trace = traceback.format_exc()
+            print(f"Error in {action} for {model_name}: {str(e)}")
+            print(error_trace)
+            return Response({
+                "error": str(e),
+                "traceback": error_trace if settings.DEBUG else None
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def get(self, request, model_name, action):
         """Handle GET requests for features/metadata."""

@@ -187,34 +187,34 @@ export function ModelHub({
               onScroll={updateScrollButtons}
               className="flex gap-6 overflow-x-auto overflow-y-hidden pb-2 scrollbar-none"
             >
-              {filteredModels.length === 0 ? (
+            {filteredModels.length === 0 ? (
                 <div className="min-w-full rounded-2xl border border-white/10 bg-white/5 p-10 text-center text-white/60">
-                  No models match the query.
-                </div>
-              ) : (
+                No models match the query.
+              </div>
+            ) : (
                 filteredModels.map((model) => {
                   const isPlanned = model.status === "planned";
                   return (
-                    <Card
-                      key={model.name}
+                <Card
+                  key={model.name}
                       className="group relative flex-none basis-[calc((100%-3rem)/3)] overflow-hidden bg-gradient-to-b from-white/5 to-white/0"
-                    >
-                      <div className="mb-4 h-24 rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent transition duration-500 group-hover:rotate-1 group-hover:scale-105">
-                        {model.name === "VoxelStack" && <CubeVisual />}
-                        {model.name === "LatentMorph" && <BlobVisual />}
-                        {model.name === "PatchFlow" && <GridVisual />}
-                        {model.name === "Attentio Core" && <ConstellationVisual />}
-                        {model.name === "ChronoCoil" && <HelixVisual />}
-                        {model.name === "TransFlow" && <DualSphereVisual />}
-                        {model.name === "HyperSector" && <HyperplaneVisual />}
-                        {model.name === "FractalLogic" && <TreeVisual />}
-                        {model.name === "SimpleFit" && <DataPlaneVisual />}
-                        {model.name === "GridWalker" && <CompassVisual />}
-                      </div>
+                >
+                  <div className="mb-4 h-24 rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent transition duration-500 group-hover:rotate-1 group-hover:scale-105">
+                    {model.name === "VoxelStack" && <CubeVisual />}
+                    {model.name === "LatentMorph" && <BlobVisual />}
+                    {model.name === "PatchFlow" && <GridVisual />}
+                    {model.name === "Attentio Core" && <ConstellationVisual />}
+                    {model.name === "ChronoCoil" && <HelixVisual />}
+                    {model.name === "TransFlow" && <DualSphereVisual />}
+                    {model.name === "HyperSector" && <HyperplaneVisual />}
+                    {model.name === "FractalLogic" && <TreeVisual />}
+                    {model.name === "SimpleFit" && <DataPlaneVisual />}
+                    {model.name === "GridWalker" && <CompassVisual />}
+                  </div>
                       <div className="flex items-center justify-between gap-2">
-                        <p className="text-xs uppercase tracking-[0.3em] text-white/45">
-                          {model.type}
-                        </p>
+                  <p className="text-xs uppercase tracking-[0.3em] text-white/45">
+                    {model.type}
+                  </p>
                         {isPlanned && (
                           <span className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-white/70">
                             <Clock className="h-3 w-3" />
@@ -222,21 +222,21 @@ export function ModelHub({
                           </span>
                         )}
                       </div>
-                      <h4 className="mt-3 text-2xl font-semibold text-white">
-                        {model.name}
-                      </h4>
-                      <p className="text-sm text-white/55">{model.subtitle}</p>
+                  <h4 className="mt-3 text-2xl font-semibold text-white">
+                    {model.name}
+                  </h4>
+                  <p className="text-sm text-white/55">{model.subtitle}</p>
                       <p className="mt-3 text-sm text-white/60">
                         {model.description}
                       </p>
-                      <Button
-                        variant="glass"
+                  <Button
+                    variant="glass"
                         disabled={isPlanned}
-                        onClick={() => {
+                    onClick={() => {
                           if (!isPlanned) {
-                            router.push(`/models/${model.slug}`);
+                      router.push(`/models/${model.slug}`);
                           }
-                        }}
+                    }}
                         className={`mt-6 w-full opacity-0 transition group-hover:opacity-100 ${
                           isPlanned
                             ? "cursor-default opacity-100 bg-white/5 text-white/60 hover:bg-white/5"
@@ -244,11 +244,11 @@ export function ModelHub({
                         }`}
                       >
                         {isPlanned ? "Planned" : "Launch"}
-                      </Button>
-                    </Card>
+                  </Button>
+                </Card>
                   );
                 })
-              )}
+            )}
             </div>
           </div>
         </div>

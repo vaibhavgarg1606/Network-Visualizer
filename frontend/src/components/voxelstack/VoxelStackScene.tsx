@@ -1,101 +1,107 @@
-import { ShieldAlert, Mountain } from 'lucide-react';
+import { Mountain } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Scene from '@/components/Scene';
 import { ViewMode } from '@/components/common/ModeSelector';
 
 interface VoxelStackSceneProps {
     mode: ViewMode;
-    noiseLevel: number;
-    setNoiseLevel: (val: number) => void;
-    showTerrain: boolean;
-    setShowTerrain: (val: boolean) => void;
     rgbExplosion: boolean;
     layerSpacing: number;
     setSelectedLayer: (id: number) => void;
     setActiveTab: (tab: 'prediction' | 'features') => void;
     architecture: string;
     liveFeatureMaps: Record<string, { maps: string[], total: number }>;
+    gradcamData?: any;
+    gradcamLayerIndex?: number | null;
+    onGradcamLayerSelect?: (layerIndex: number) => void;
+    isLoadingGradcam?: boolean;
+    viewMode: 'tunnel' | 'gallery';
 }
 
 export default function VoxelStackScene({
     mode,
-    noiseLevel,
-    setNoiseLevel,
-    showTerrain,
-    setShowTerrain,
+    viewMode,
     rgbExplosion,
     layerSpacing,
     setSelectedLayer,
     setActiveTab,
     architecture,
-    liveFeatureMaps
+    liveFeatureMaps,
+    gradcamData,
+    gradcamLayerIndex,
+    onGradcamLayerSelect,
+    isLoadingGradcam
 }: VoxelStackSceneProps) {
+    // Get available conv layers for Grad-CAM
+    const getAvailableLayers = () => {
+        if (architecture === 'vgg16') {
+            return Array.from({ length: 13 }, (_, i) => ({
+                index: i,
+                name: `Conv${Math.floor(i / 2) + 1}_${(i % 2) + 1}`,
+                displayName: `Conv ${i + 1}`
+            }));
+        }
+        return [];
+    };
     return (
         <>
             <div className="absolute inset-0">
                 <Scene
                     mode={mode}
-                    noiseLevel={noiseLevel}
-                    showTerrain={showTerrain}
+                    viewMode={viewMode}
                     rgbExplosion={rgbExplosion}
                     layerSpacing={layerSpacing}
                     onLayerClick={(id) => {
-                        setSelectedLayer(id);
-                        setActiveTab('features');
+                        if (mode === 'gradcam' && onGradcamLayerSelect) {
+                            onGradcamLayerSelect(id);
+                        } else {
+                            setSelectedLayer(id);
+                            setActiveTab('features');
+                        }
                     }}
                     architecture={architecture}
                     liveFeatureMaps={liveFeatureMaps}
+                    gradcamData={gradcamData}
+                    gradcamLayerIndex={gradcamLayerIndex}
                 />
             </div>
             {/* Mode Specific Controls */}
-            {mode === 'adversarial' && (
-                <div className="absolute top-6 right-6 bg-[#14161C]/90 backdrop-blur-md border border-red-500/30 rounded-2xl p-4 w-64 animate-in fade-in slide-in-from-top-4 z-20">
-                    <div className="flex justify-between items-center mb-3">
-                        <div className="flex items-center gap-2">
-                            <ShieldAlert className="w-4 h-4 text-red-400" />
-                            <span className="text-xs font-bold text-red-400 uppercase tracking-wider">Attack Config</span>
-                        </div>
-                        <span className="text-xs font-mono text-red-300">ε: {(noiseLevel / 1000).toFixed(3)}</span>
+            {mode === 'gradcam' && (
+                <div className="absolute top-6 right-6 bg-[#14161C]/90 backdrop-blur-md border border-cyan-500/30 rounded-2xl p-4 w-72 animate-in fade-in slide-in-from-top-4 z-20">
+                    <div className="flex items-center gap-2 mb-3">
+                        <Mountain className="w-4 h-4 text-cyan-400" />
+                        <span className="text-xs font-bold text-cyan-400 uppercase tracking-wider">Grad-CAM Layer Selection</span>
                     </div>
                     <div className="space-y-2">
-                        <div className="flex justify-between text-[10px] text-gray-500 uppercase">
-                            <span>Stealth</span>
-                            <span>Aggressive</span>
+                        <span className="text-[10px] text-gray-400 uppercase">Select Conv Layer</span>
+                        <div className="grid grid-cols-3 gap-1.5 max-h-32 overflow-y-auto">
+                            {getAvailableLayers().map((layer) => (
+                                <button
+                                    key={layer.index}
+                                    onClick={() => onGradcamLayerSelect?.(layer.index)}
+                                    disabled={isLoadingGradcam}
+                                    className={cn(
+                                        "px-2 py-1.5 rounded text-[10px] font-medium transition-all",
+                                        gradcamLayerIndex === layer.index
+                                            ? "bg-cyan-500 text-black"
+                                            : "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white",
+                                        isLoadingGradcam && "opacity-50 cursor-not-allowed"
+                                    )}
+                                >
+                                    {layer.displayName}
+                                </button>
+                            ))}
                         </div>
-                        <input
-                            type="range"
-                            min="0"
-                            max="100"
-                            value={noiseLevel}
-                            onChange={(e) => setNoiseLevel(parseInt(e.target.value))}
-                            className="w-full h-1.5 bg-red-900/50 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-red-500"
-                        />
-                    </div>
-                </div>
-            )}
-            {mode === 'gradcam' && (
-                <div className="absolute top-6 right-6 bg-[#14161C]/90 backdrop-blur-md border border-cyan-500/30 rounded-2xl p-4 w-64 animate-in fade-in slide-in-from-top-4 z-20">
-                    <div className="flex justify-between items-center mb-3">
-                        <div className="flex items-center gap-2">
-                            <Mountain className="w-4 h-4 text-cyan-400" />
-                            <span className="text-xs font-bold text-cyan-400 uppercase tracking-wider">Terrain View</span>
-                        </div>
-                        <span className="text-xs font-mono text-cyan-300">{showTerrain ? 'ON' : 'OFF'}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <span className="text-[10px] text-gray-400">Enable Displacement</span>
-                        <button
-                            onClick={() => setShowTerrain(!showTerrain)}
-                            className={cn(
-                                "w-10 h-5 rounded-full transition-colors relative",
-                                showTerrain ? "bg-cyan-500" : "bg-gray-700"
-                            )}
-                        >
-                            <div className={cn(
-                                "absolute top-1 left-1 w-3 h-3 bg-white rounded-full transition-transform",
-                                showTerrain ? "translate-x-5" : "translate-x-0"
-                            )} />
-                        </button>
+                        {gradcamData && (
+                            <div className="mt-3 pt-3 border-t border-white/10">
+                                <div className="text-[10px] text-gray-400">
+                                    Layer: <span className="text-cyan-400">{gradcamData.layer_name}</span>
+                                </div>
+                                <div className="text-[10px] text-gray-400">
+                                    Class: <span className="text-cyan-400">{gradcamData.class_label}</span>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}

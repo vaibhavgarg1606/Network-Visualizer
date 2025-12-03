@@ -11,7 +11,7 @@ interface ModelPageLayoutProps {
     leftPanel: ReactNode;
     centerPanel: ReactNode;
     rightPanel: ReactNode;
-    bottomControls: ReactNode;
+    bottomControls?: ReactNode | null;
 }
 
 export default function ModelPageLayout({ theme, header, leftPanel, centerPanel, rightPanel, bottomControls }: ModelPageLayoutProps) {
@@ -41,7 +41,7 @@ export default function ModelPageLayout({ theme, header, leftPanel, centerPanel,
                     </div>
                 </div>
 
-                {bottomControls}
+                {bottomControls && bottomControls}
             </div>
         </main>
     );

@@ -14,6 +14,8 @@ interface VoxelStackControlsProps {
     setRgbExplosion: (val: boolean) => void;
     layerSpacing: number;
     setLayerSpacing: (val: number) => void;
+    viewMode: 'tunnel' | 'gallery';
+    setViewMode: (mode: 'tunnel' | 'gallery') => void;
 }
 
 export default function VoxelStackControls({
@@ -26,7 +28,9 @@ export default function VoxelStackControls({
     rgbExplosion,
     setRgbExplosion,
     layerSpacing,
-    setLayerSpacing
+    setLayerSpacing,
+    viewMode,
+    setViewMode
 }: VoxelStackControlsProps) {
     return (
         <>
@@ -58,6 +62,23 @@ export default function VoxelStackControls({
                     Configuration
                 </div>
                 {/* Architecture selector removed to keep VoxelStack focused on a single ImageNet CNN setup */}
+                <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                        <label className="text-xs text-gray-500 uppercase tracking-wider font-medium">3D Tunnel View</label>
+                        <button
+                            onClick={() => setViewMode(viewMode === 'tunnel' ? 'gallery' : 'tunnel')}
+                            className={cn(
+                                "w-8 h-4 rounded-full transition-colors relative",
+                                viewMode === 'tunnel' ? "bg-cyan-500" : "bg-gray-700"
+                            )}
+                        >
+                            <div className={cn(
+                                "absolute top-0.5 left-0.5 w-3 h-3 bg-white rounded-full transition-transform",
+                                viewMode === 'tunnel' ? "translate-x-4" : "translate-x-0"
+                            )} />
+                        </button>
+                    </div>
+                </div>
                 <div className="space-y-3">
                     <div className="flex items-center justify-between">
                         <label className="text-xs text-gray-500 uppercase tracking-wider font-medium">RGB Explosion</label>

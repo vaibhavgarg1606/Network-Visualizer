@@ -2,13 +2,12 @@
 
 import { useState, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { ArrowLeft, Play, Pause, Rewind, FastForward, Layers, Activity, Eye, ShieldAlert, Zap, Mountain, RotateCcw, Github, Box, Maximize2, Sliders, Grid, AlertTriangle, CheckCircle2, BarChart3, ScanSearch } from 'lucide-react';
+import { ArrowLeft, Zap, RotateCcw, Box, Maximize2, Sliders, Grid, BarChart3, ScanSearch, Activity } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import Scene from '@/components/Scene';
 import DrawingCanvas from '@/components/DrawingCanvas';
 
-type ViewMode = 'normal' | 'adversarial' | 'gradcam';
 type RightPanelTab = 'prediction' | 'features';
 
 interface PredictionResult {
@@ -17,15 +16,12 @@ interface PredictionResult {
 }
 
 export default function VoxelStackPage() {
-    const [mode, setMode] = useState<ViewMode>('normal');
     const [selectedLayer, setSelectedLayer] = useState<number | null>(null);
-    const [noiseLevel, setNoiseLevel] = useState(0);
-    const [showTerrain, setShowTerrain] = useState(false);
-    const [architecture, setArchitecture] = useState('mnist');
+    const [architecture] = useState('mnist');
     const [rgbExplosion, setRgbExplosion] = useState(false);
     const [layerSpacing, setLayerSpacing] = useState(2);
     const [activeTab, setActiveTab] = useState<RightPanelTab>('prediction');
-    const [liveFeatureMaps, setLiveFeatureMaps] = useState<Record<string, string[]>>({});
+    const [liveFeatureMaps, setLiveFeatureMaps] = useState<Record<string, { maps: string[], total: number }>>({});
     const [isTraining, setIsTraining] = useState(false);
     const [trainLoss, setTrainLoss] = useState<number | null>(null);
 
@@ -34,40 +30,15 @@ export default function VoxelStackPage() {
     const [prediction, setPrediction] = useState<PredictionResult | null>(null);
     const [isPredicting, setIsPredicting] = useState(false);
 
-    // Theme classes based on mode
-    const getThemeClasses = () => {
-        switch (mode) {
-            case 'adversarial':
-                return {
-                    theme: 'theme-red',
-                    bleed: 'bg-bleed-red',
-                    accent: 'text-red-500',
-                    border: 'border-red-500/10',
-                    glow: 'shadow-[0_0_20px_rgba(239,68,68,0.1)]',
-                    bg: 'bg-[#0a0505]'
-                };
-            case 'gradcam':
-                return {
-                    theme: 'theme-blue',
-                    bleed: 'bg-bleed-cyan',
-                    accent: 'text-cyan-400',
-                    border: 'border-cyan-400/30',
-                    glow: 'shadow-[0_0_20px_rgba(34,211,238,0.3)]',
-                    bg: 'bg-[#050a14]'
-                };
-            default:
-                return {
-                    theme: 'theme-cyan',
-                    bleed: 'bg-bleed-cyan',
-                    accent: 'text-white',
-                    border: 'border-white/10',
-                    glow: 'shadow-[0_0_20px_rgba(255,255,255,0.1)]',
-                    bg: 'bg-[#050608]'
-                };
-        }
+    // Always use normal theme
+    const styles = {
+        theme: 'theme-cyan',
+        bleed: 'bg-bleed-cyan',
+        accent: 'text-white',
+        border: 'border-white/10',
+        glow: 'shadow-[0_0_20px_rgba(255,255,255,0.1)]',
+        bg: 'bg-[#050608]'
     };
-
-    const styles = getThemeClasses();
 
     const handleDraw = (pixels: number[]) => {
         setCurrentPixels(pixels);
@@ -86,7 +57,15 @@ export default function VoxelStackPage() {
             const data = await response.json();
 
             if (data.feature_maps) {
-                setLiveFeatureMaps(data.feature_maps);
+                // Convert API format { "0": ["url1", "url2"], ... } to component format { "0": { maps: [...], total: N }, ... }
+                const converted: Record<string, { maps: string[], total: number }> = {};
+                Object.entries(data.feature_maps).forEach(([layerId, maps]) => {
+                    converted[layerId] = {
+                        maps: maps as string[],
+                        total: (maps as string[]).length
+                    };
+                });
+                setLiveFeatureMaps(converted);
             }
             if (data.probabilities) {
                 setPrediction({
@@ -175,7 +154,7 @@ export default function VoxelStackPage() {
                                 <Maximize2 className={cn("w-6 h-6 mb-4", styles.accent)} />
                                 <h3 className="text-sm font-medium text-white mb-2">Interactions</h3>
                                 <p className="text-xs text-gray-400 leading-relaxed">
-                                    Use the bottom controls to switch modes. Drag to rotate, scroll to zoom. Click layers to inspect specific activation grids.
+                                    Drag to rotate, scroll to zoom. Click layers to inspect specific activation grids.
                                 </p>
                             </div>
                         </div>
@@ -291,9 +270,9 @@ export default function VoxelStackPage() {
                     <div className="flex-1 relative rounded-3xl overflow-hidden border border-white/10 bg-black/50 shadow-2xl min-h-[400px]">
                         <div className="absolute inset-0">
                             <Scene
-                                mode={mode}
-                                noiseLevel={noiseLevel}
-                                showTerrain={showTerrain}
+                                mode="normal"
+                                noiseLevel={0}
+                                showTerrain={false}
                                 rgbExplosion={rgbExplosion}
                                 layerSpacing={layerSpacing}
                                 onLayerClick={(id) => {
@@ -305,60 +284,6 @@ export default function VoxelStackPage() {
                                 probabilities={prediction?.probabilities}
                             />
                         </div>
-
-                        {/* Mode Specific Controls Floating - Standardized Dimensions */}
-                        {mode === 'adversarial' && (
-                            <div className="absolute top-6 right-6 bg-[#14161C]/90 backdrop-blur-md border border-red-500/30 rounded-2xl p-4 w-64 animate-in fade-in slide-in-from-top-4 z-20">
-                                <div className="flex justify-between items-center mb-3">
-                                    <div className="flex items-center gap-2">
-                                        <ShieldAlert className="w-4 h-4 text-red-400" />
-                                        <span className="text-xs font-bold text-red-400 uppercase tracking-wider">Attack Config</span>
-                                    </div>
-                                    <span className="text-xs font-mono text-red-300">ε: {(noiseLevel / 1000).toFixed(3)}</span>
-                                </div>
-                                <div className="space-y-2">
-                                    <div className="flex justify-between text-[10px] text-gray-500 uppercase">
-                                        <span>Stealth</span>
-                                        <span>Aggressive</span>
-                                    </div>
-                                    <input
-                                        type="range"
-                                        min="0"
-                                        max="100"
-                                        value={noiseLevel}
-                                        onChange={(e) => setNoiseLevel(parseInt(e.target.value))}
-                                        className="w-full h-1.5 bg-red-900/50 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-red-500"
-                                    />
-                                </div>
-                            </div>
-                        )}
-
-                        {mode === 'gradcam' && (
-                            <div className="absolute top-6 right-6 bg-[#14161C]/90 backdrop-blur-md border border-cyan-500/30 rounded-2xl p-4 w-64 animate-in fade-in slide-in-from-top-4 z-20">
-                                <div className="flex justify-between items-center mb-3">
-                                    <div className="flex items-center gap-2">
-                                        <Mountain className="w-4 h-4 text-cyan-400" />
-                                        <span className="text-xs font-bold text-cyan-400 uppercase tracking-wider">Terrain View</span>
-                                    </div>
-                                    <span className="text-xs font-mono text-cyan-300">{showTerrain ? 'ON' : 'OFF'}</span>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                    <span className="text-[10px] text-gray-400">Enable Displacement</span>
-                                    <button
-                                        onClick={() => setShowTerrain(!showTerrain)}
-                                        className={cn(
-                                            "w-10 h-5 rounded-full transition-colors relative",
-                                            showTerrain ? "bg-cyan-500" : "bg-gray-700"
-                                        )}
-                                    >
-                                        <div className={cn(
-                                            "absolute top-1 left-1 w-3 h-3 bg-white rounded-full transition-transform",
-                                            showTerrain ? "translate-x-5" : "translate-x-0"
-                                        )} />
-                                    </button>
-                                </div>
-                            </div>
-                        )}
                     </div>
 
                     {/* Right Panel: Output & Inspection (Fixed Width) */}
@@ -375,7 +300,7 @@ export default function VoxelStackPage() {
                             >
                                 Output
                                 {activeTab === 'prediction' && (
-                                    <div className={cn("absolute bottom-0 left-0 right-0 h-0.5", styles.bg === 'bg-[#0a0505]' ? 'bg-red-500' : 'bg-cyan-400')} />
+                                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-cyan-400" />
                                 )}
                             </button>
                             <button
@@ -387,7 +312,7 @@ export default function VoxelStackPage() {
                             >
                                 Features
                                 {activeTab === 'features' && (
-                                    <div className={cn("absolute bottom-0 left-0 right-0 h-0.5", styles.bg === 'bg-[#0a0505]' ? 'bg-red-500' : 'bg-cyan-400')} />
+                                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-cyan-400" />
                                 )}
                             </button>
                         </div>
@@ -473,25 +398,6 @@ export default function VoxelStackPage() {
                                             </>
                                         )}
                                     </div>
-
-                                    {/* Adversarial Target (Only in Attack Mode) */}
-                                    {mode === 'adversarial' && (
-                                        <div className="pt-6 border-t border-white/10">
-                                            <div className="flex items-center gap-2 text-sm font-medium text-red-400 mb-4">
-                                                <ShieldAlert className="w-4 h-4" />
-                                                Adversarial Target
-                                            </div>
-                                            <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 relative overflow-hidden">
-                                                <div className="flex justify-between items-center mb-2 relative z-10">
-                                                    <span className="text-sm font-bold text-red-400">Gibbon</span>
-                                                    <span className="text-sm font-mono font-bold text-red-500">98.2%</span>
-                                                </div>
-                                                <div className="w-full h-1.5 bg-red-900/30 rounded-full overflow-hidden relative z-10">
-                                                    <div className="h-full w-[98.2%] bg-red-500" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
                                 </div>
                             ) : (
                                 <div className="h-full flex flex-col animate-in fade-in slide-in-from-right-2 space-y-6">
@@ -501,16 +407,17 @@ export default function VoxelStackPage() {
                                             <div>
                                                 <h3 className="text-sm font-medium text-gray-300 mb-3">Layer Feature Maps</h3>
                                                 <div className="space-y-4">
-                                                    {Object.entries(liveFeatureMaps).map(([layerId, maps]) => {
-                                                        const layerNames = ['Conv1 (16)', 'Pool1 (16)', 'Conv2 (32)', 'Pool2 (32)'];
-                                                        return (
-                                                            <div key={layerId} className="space-y-2">
-                                                                <div className="flex items-center justify-between">
-                                                                    <span className="text-xs text-gray-400">{layerNames[parseInt(layerId)]}</span>
-                                                                    <span className="text-[10px] text-gray-500">{maps.length} maps</span>
-                                                                </div>
-                                                                <div className="grid grid-cols-8 gap-1">
-                                                                    {maps.slice(0, 16).map((url, idx) => (
+                                    {Object.entries(liveFeatureMaps).map(([layerId, layerData]) => {
+                                        const layerNames = ['Conv1 (16)', 'Pool1 (16)', 'Conv2 (32)', 'Pool2 (32)'];
+                                        const maps = layerData.maps;
+                                        return (
+                                            <div key={layerId} className="space-y-2">
+                                                <div className="flex items-center justify-between">
+                                                    <span className="text-xs text-gray-400">{layerNames[parseInt(layerId)]}</span>
+                                                    <span className="text-[10px] text-gray-500">{maps.length} maps</span>
+                                                </div>
+                                                <div className="grid grid-cols-8 gap-1">
+                                                    {maps.slice(0, 16).map((url, idx) => (
                                                                         <div key={idx} className="aspect-square rounded overflow-hidden border border-white/10">
                                                                             <img src={url} alt={`Feature ${idx}`} className="w-full h-full object-cover" />
                                                                         </div>
@@ -571,42 +478,6 @@ export default function VoxelStackPage() {
                             )}
                         </div>
                     </div>
-                </div>
-            </div>
-
-            {/* Sticky Bottom Mode Switcher */}
-            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
-                <div className="bg-[#14161C]/90 backdrop-blur-xl border border-white/10 rounded-full p-1.5 flex items-center gap-1 shadow-2xl">
-                    <button
-                        onClick={() => setMode('normal')}
-                        className={cn(
-                            "px-6 py-2.5 rounded-full text-sm font-medium transition-all flex items-center gap-2",
-                            mode === 'normal' ? "bg-white text-black shadow-lg" : "text-gray-400 hover:text-white hover:bg-white/5"
-                        )}
-                    >
-                        <Eye className="w-4 h-4" />
-                        Normal
-                    </button>
-                    <button
-                        onClick={() => setMode('adversarial')}
-                        className={cn(
-                            "px-6 py-2.5 rounded-full text-sm font-medium transition-all flex items-center gap-2",
-                            mode === 'adversarial' ? "bg-red-600 text-white shadow-[0_0_15px_rgba(220,38,38,0.5)]" : "text-gray-400 hover:text-red-400 hover:bg-red-500/10"
-                        )}
-                    >
-                        <ShieldAlert className="w-4 h-4" />
-                        Attack
-                    </button>
-                    <button
-                        onClick={() => setMode('gradcam')}
-                        className={cn(
-                            "px-6 py-2.5 rounded-full text-sm font-medium transition-all flex items-center gap-2",
-                            mode === 'gradcam' ? "bg-cyan-600 text-white shadow-[0_0_15px_rgba(8,145,178,0.5)]" : "text-gray-400 hover:text-cyan-400 hover:bg-cyan-500/10"
-                        )}
-                    >
-                        <Mountain className="w-4 h-4" />
-                        Grad-CAM
-                    </button>
                 </div>
             </div>
         </main>

@@ -1,7 +1,7 @@
-import { Eye, ShieldAlert, Mountain } from 'lucide-react';
+import { Eye, Mountain } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export type ViewMode = 'normal' | 'adversarial' | 'gradcam';
+export type ViewMode = 'normal' | 'gradcam';
 
 interface ModeSelectorProps {
     mode: ViewMode;
@@ -21,16 +21,6 @@ export default function ModeSelector({ mode, setMode }: ModeSelectorProps) {
                 >
                     <Eye className="w-4 h-4" />
                     Normal
-                </button>
-                <button
-                    onClick={() => setMode('adversarial')}
-                    className={cn(
-                        "px-6 py-2.5 rounded-full text-sm font-medium transition-all flex items-center gap-2",
-                        mode === 'adversarial' ? "bg-red-600 text-white shadow-[0_0_15px_rgba(220,38,38,0.5)]" : "text-gray-400 hover:text-red-400 hover:bg-red-500/10"
-                    )}
-                >
-                    <ShieldAlert className="w-4 h-4" />
-                    Attack
                 </button>
                 <button
                     onClick={() => setMode('gradcam')}

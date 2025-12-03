@@ -11,28 +11,21 @@ import VoxelStackOutput, { RightPanelTab } from '@/components/voxelstack/VoxelSt
 export default function VoxelStackPage() {
     const [mode, setMode] = useState<ViewMode>('normal');
     const [selectedLayer, setSelectedLayer] = useState<number | null>(null);
-    const [noiseLevel, setNoiseLevel] = useState(0);
-    const [showTerrain, setShowTerrain] = useState(false);
     const [architecture, setArchitecture] = useState('vgg16');
     const [rgbExplosion, setRgbExplosion] = useState(false);
     const [layerSpacing, setLayerSpacing] = useState(2);
     const [activeTab, setActiveTab] = useState<RightPanelTab>('prediction');
+    const [viewMode, setViewMode] = useState<'tunnel' | 'gallery'>('gallery');
     const [currentImage, setCurrentImage] = useState<string | null>(null);
     const [prediction, setPrediction] = useState<any>(null);
     const [isPredicting, setIsPredicting] = useState(false);
     const [liveFeatureMaps, setLiveFeatureMaps] = useState<Record<string, { maps: string[], total: number }>>({});
+    const [gradcamData, setGradcamData] = useState<any>(null);
+    const [gradcamLayerIndex, setGradcamLayerIndex] = useState<number | null>(null);
+    const [isLoadingGradcam, setIsLoadingGradcam] = useState(false);
 
     const getThemeClasses = () => {
         switch (mode) {
-            case 'adversarial':
-                return {
-                    theme: 'theme-red',
-                    bleed: 'bg-bleed-red',
-                    accent: 'text-red-500',
-                    border: 'border-red-500/10',
-                    glow: 'shadow-[0_0_20px_rgba(239,68,68,0.1)]',
-                    bg: 'bg-[#0a0505]'
-                };
             case 'gradcam':
                 return {
                     theme: 'theme-blue',
@@ -72,6 +65,48 @@ export default function VoxelStackPage() {
             console.error('Prediction failed:', error);
         } finally {
             setIsPredicting(false);
+        }
+    };
+
+    const handleGradcamLayerSelect = async (layerIndex: number) => {
+        if (!currentImage || mode !== 'gradcam') return;
+
+        setIsLoadingGradcam(true);
+        setGradcamLayerIndex(layerIndex);
+
+        try {
+            const response = await fetch(`http://localhost:8000/api/models/${architecture}/gradcam/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    image: currentImage,
+                    layer_index: layerIndex,
+                    class_idx: prediction?.probabilities?.[0] ? null : null // Use top class
+                })
+            });
+            const data = await response.json();
+            console.log('Grad-CAM Response:', {
+                hasHeatmap: !!data.heatmap,
+                hasHeatmapData: !!data.heatmap_data,
+                heatmapDataShape: data.heatmap_data ? `${data.heatmap_data.length}x${data.heatmap_data[0]?.length}` : 'none',
+                layerName: data.layer_name,
+                classLabel: data.class_label
+            });
+            setGradcamData(data);
+        } catch (error) {
+            console.error('Grad-CAM failed:', error);
+            setGradcamData(null);
+        } finally {
+            setIsLoadingGradcam(false);
+        }
+    };
+
+    // Reset Grad-CAM when mode changes
+    const handleModeChange = (newMode: ViewMode) => {
+        setMode(newMode);
+        if (newMode !== 'gradcam') {
+            setGradcamData(null);
+            setGradcamLayerIndex(null);
         }
     };
 
@@ -116,21 +151,24 @@ export default function VoxelStackPage() {
                     setRgbExplosion={setRgbExplosion}
                     layerSpacing={layerSpacing}
                     setLayerSpacing={setLayerSpacing}
+                    viewMode={viewMode}
+                    setViewMode={setViewMode}
                 />
             }
             centerPanel={
                 <VoxelStackScene
                     mode={mode}
-                    noiseLevel={noiseLevel}
-                    setNoiseLevel={setNoiseLevel}
-                    showTerrain={showTerrain}
-                    setShowTerrain={setShowTerrain}
+                    viewMode={viewMode}
                     rgbExplosion={rgbExplosion}
                     layerSpacing={layerSpacing}
                     setSelectedLayer={setSelectedLayer}
                     setActiveTab={setActiveTab}
                     architecture={architecture}
                     liveFeatureMaps={liveFeatureMaps}
+                    gradcamData={gradcamData}
+                    gradcamLayerIndex={gradcamLayerIndex}
+                    onGradcamLayerSelect={handleGradcamLayerSelect}
+                    isLoadingGradcam={isLoadingGradcam}
                 />
             }
             rightPanel={
@@ -144,7 +182,7 @@ export default function VoxelStackPage() {
                 />
             }
             bottomControls={
-                <ModeSelector mode={mode} setMode={setMode} />
+                <ModeSelector mode={mode} setMode={handleModeChange} />
             }
         />
     );

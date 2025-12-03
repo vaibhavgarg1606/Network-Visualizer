@@ -6,12 +6,12 @@ import * as THREE from 'three';
 
 interface GhostKernelProps {
     layerId: number;
-    mode: 'normal' | 'adversarial' | 'gradcam';
+    mode: 'normal' | 'gradcam';
 }
 
 export default function GhostKernel({ layerId, mode }: GhostKernelProps) {
     const kernelRef = useRef<THREE.Group>(null);
-    const color = mode === 'adversarial' ? '#ff0000' : '#ffff00';
+    const color = '#ffff00';
 
     useFrame((state) => {
         if (kernelRef.current) {
@@ -44,7 +44,7 @@ export default function GhostKernel({ layerId, mode }: GhostKernelProps) {
             {/* Connection Line to next layer (simulated) */}
             <mesh position={[0.5, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
                 <cylinderGeometry args={[0.02, 0.02, 1, 8]} />
-                <meshBasicMaterial color={mode === 'adversarial' ? "red" : "cyan"} transparent opacity={0.5} />
+                <meshBasicMaterial color="cyan" transparent opacity={0.5} />
             </mesh>
         </group>
     );
